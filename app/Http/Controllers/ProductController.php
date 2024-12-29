@@ -3,7 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
@@ -12,7 +17,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::with('category')->orderBy('id', 'desc')->get();
+
+        return view('admin.products.index', [
+            'products' => $products
+        ]);
     }
 
     /**
@@ -20,7 +29,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('admin.products.create', [
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -28,7 +40,35 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'category_id' => 'required|integer',
+            'about' => 'required|string',
+            'photo' => 'required|image|mimes:png,jpg,svg'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('product_photos', 'public');
+                $validated['photo'] = $photoPath;
+            }
+            $validated['slug'] = Str::slug($request->name);
+            $newProduct = Product::create($validated);
+
+
+            DB::commit();
+
+            return redirect()->route('admin.products.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System error! ' . $e->getMessage()]
+            ]);
+
+            throw $error;
+        }
     }
 
     /**
@@ -44,7 +84,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $categories = Category::all();
+        return view('admin.products.edit', [
+            'product' => $product,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -52,7 +96,35 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'category_id' => 'required|integer',
+            'about' => 'required|string',
+            'photo' => 'sometimes|image|mimes:png,jpg,svg'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            if ($request->hasFile('photo')) {
+                $photoPath = $request->file('photo')->store('product_photos', 'public');
+                $validated['photo'] = $photoPath;
+            }
+            $validated['slug'] = Str::slug($request->name);
+            $product->update($validated);
+
+
+            DB::commit();
+
+            return redirect()->route('admin.products.index');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $error = ValidationException::withMessages([
+                'system_error' => ['System error! ' . $e->getMessage()]
+            ]);
+
+            throw $error;
+        }
     }
 
     /**
@@ -60,6 +132,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        if ($product->photo) {
+            Storage::disk('public')->delete($product->photo);
+        }
+
+        return redirect()->route('admin.products.index');
     }
 }
