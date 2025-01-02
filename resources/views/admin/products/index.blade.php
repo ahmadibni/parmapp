@@ -19,21 +19,21 @@
                     <div class="item-card flex flex-row justify-between items-center">
                         <div class="flex flex-row item-center gap-4">
                             <img src="{{ Storage::url($product->photo) }}" alt="" class="w-[50px]">
-                            <div>
+                            <div class="flex flex-col justify-center max-w-md">
                                 <h3 class="text-xl font-bold text-indigo-950">{{ $product->name }}</h3>
-                                <p class="text-base text-slate-500">Rp.{{ $product->price }}</p>
+                                <p class="text-base text-slate-500">Rp.{{ number_format($product->price, 0, ',', '.') }}</p>
                             </div>
                         </div>
-                        <p class="text-lg text-slate-500">{{ $product->category->name }}</p>
 
                         <!-- Button -->
                         <div class="flex flex-row items-center gap-2">
+                            <p class="text-lg text-slate-500 me-8">{{ $product->category->name }}</p>
                             <a href="{{ route('admin.products.edit', $product) }}"
-                                class="px-5 py-2 font-bold bg-indigo-700 text-white rounded-full">Edit</a>
+                                class="px-5 py-2 bg-indigo-700 font-bold text-white rounded-full">Edit</a>
                             <form action="{{ route('admin.products.destroy', $product) }}" method="post">
                                 @csrf
                                 @method('delete')
-                                <button class="px-5 py-2 font-bold bg-red-700 text-white rounded-full">Delete</button>
+                                <button class="px-5 py-2 bg-red-700 font-bold text-white rounded-full">Delete</button>
                             </form>
                         </div>
                     </div>

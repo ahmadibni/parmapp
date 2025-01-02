@@ -46,7 +46,8 @@
                         <select id="category_id" name="category_id"
                             class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                             required>
-                            <option value="" disable selected>{{ __('Select product category') }}</option>
+                            <option value="{{ $product->category->id }}" disable selected>{{ $product->category->name }}
+                            </option>
                             @forelse ($categories as $category)
                                 <option value="{{ $category->id }}">
                                     {{ $category->name }}

@@ -21,11 +21,11 @@
                         <h3 class="text-xl font-bold text-indigo-950">{{ $category->name }}</h3>
                         <div class="flex flex-row items-center gap-2">
                             <a href="{{ route('admin.categories.edit', $category) }}"
-                                class="px-5 py-2 font-bold bg-indigo-700 text-white rounded-full">Edit</a>
+                                class="px-5 py-2  bg-indigo-700 font-bold text-white rounded-full">Edit</a>
                             <form action="{{ route('admin.categories.destroy', $category) }}" method="post">
                                 @csrf
                                 @method('delete')
-                                <button class="px-5 py-2 font-bold bg-red-700 text-white rounded-full">Delete</button>
+                                <button class="px-5 py-2  bg-red-700 font-bold text-white rounded-full">Delete</button>
                             </form>
                         </div>
                     </div>

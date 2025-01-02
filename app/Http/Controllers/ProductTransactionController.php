@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ProductTransaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductTransactionController extends Controller
 {
@@ -12,7 +13,10 @@ class ProductTransactionController extends Controller
      */
     public function index()
     {
-        //
+        $productTransactions = ProductTransaction::all();
+        return view('admin.product_transactions.index', [
+            'product_transactions' => $productTransactions
+        ]);
     }
 
     /**
@@ -28,7 +32,15 @@ class ProductTransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'address' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'post_code' => 'required|integer|max:255',
+            'phone_number' => 'required|integer|max:255',
+            'notes' => 'required|string',
+        ]);
     }
 
     /**
@@ -36,7 +48,10 @@ class ProductTransactionController extends Controller
      */
     public function show(ProductTransaction $productTransaction)
     {
-        //
+        $productTransaction = ProductTransaction::with('transactionDetails.product')->find($productTransaction->id);
+        return view('admin.product_transactions.details', [
+            'product_transaction' => $productTransaction
+        ]);
     }
 
     /**
@@ -52,7 +67,10 @@ class ProductTransactionController extends Controller
      */
     public function update(Request $request, ProductTransaction $productTransaction)
     {
-        //
+        $productTransaction->update([
+            'is_paid' => true
+        ]);
+        return redirect()->back();
     }
 
     /**
