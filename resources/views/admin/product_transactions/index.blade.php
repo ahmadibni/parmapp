@@ -3,7 +3,7 @@
         <div class="flex flex-row w-full justify-between items-center">
 
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ Auth::user()->hasRole('owner') ? __('Apotek Orders') : __('My Transactions') }}
+                {{ Auth::user()->hasRole('owner') ? __('Apotek Orders') : __('My Orders') }}
             </h2>
         </div>
     </x-slot>
@@ -14,31 +14,36 @@
 
                 @forelse ($product_transactions as $transaction)
                     <div class="item-card flex flex-row justify-between items-center">
-                        <div>
-                            <p class="text-base text-slate-500">
-                                Name
-                            </p>
-                            <h3 class="text-xl font-bold text-indigo-950">
-                                {{ $transaction->user->name }}
-                            </h3>
-                        </div>
-                        <div class="flex flex-row item-center gap-4">
-                            <img src="#" alt="" class="w-[50px]">
-                            <div>
-                                <p class="text-base text-slate-500">
-                                    Total Transactions
-                                </p>
-                                <h3 class="text-xl font-bold text-indigo-950">
-                                    Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
-                                </h3>
+                        @role('owner')
+                            <div class="flex flex-row item-center gap-4">
+                                <div>
+                                    <p class="text-base text-slate-500">
+                                        Name
+                                    </p>
+                                    <h3 class="text-xl font-bold text-indigo-950">
+                                        {{ $transaction->user->name }}
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
-                        <div>
+                        @endrole
+                        <a href="{{ route('product-transactions.show', $transaction) }}">
+                            <div class="flex flex-row item-center gap-4">
+                                <div>
+                                    <p class="text-base text-slate-500">
+                                        Total Transactions
+                                    </p>
+                                    <h3 class="text-xl font-bold text-indigo-950">
+                                        Rp. {{ number_format($transaction->total_amount, 0, ',', '.') }}
+                                    </h3>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="hidden md:flex flex-col">
                             <p class="text-base text-slate-500">
                                 Date
                             </p>
                             <h3 class="text-xl font-bold text-indigo-950">
-                                {{ $transaction->created_at }}
+                                {{ $transaction->created_at->format('d F Y') }}
                             </h3>
                         </div>
 
@@ -56,7 +61,7 @@
                             </span>
                         @endif
 
-                        <div class="flex flex-row items-center gap-2">
+                        <div class="hidden md:flex flex-row items-center gap-2">
                             <a href="{{ route('product-transactions.show', $transaction) }}"
                                 class="px-5 py-2 font-bold bg-indigo-700 text-white rounded-full">
                                 View Details

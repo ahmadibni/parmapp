@@ -11,6 +11,18 @@
 
 <body>
     <!-- Topbar -->
+    @if ($errors->any())
+        <div class="mb-4">
+            <div class="font-medium text-red-600">
+                {{ __('Whoops! Something went wrong.') }}
+            </div>
+            <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <section class="relative flex items-center justify-between w-full gap-5 wrapper">
         <a href="{{ route('front.index') }}" class="p-2 bg-white rounded-full">
             <img src="{{ asset('assets/svgs/ic-arrow-left.svg') }}" class="size-5" alt="">
@@ -32,7 +44,6 @@
             </button>
         </div>
         <div class="flex flex-col gap-4" id="itemsList">
-            <!-- Softovac Rami -->
             @forelse ($carts as $cart)
                 <div class="py-3.5 pl-4 pr-[22px] bg-white rounded-2xl flex gap-1 items-center relative">
                     <img src="{{ Storage::url($cart->product->photo) }}"
@@ -239,7 +250,7 @@
 
                 </p>
             </div>
-            <button type="button"
+            <button type="submit"
                 class="inline-flex items-center justify-center px-5 py-3 text-base font-bold text-white rounded-full w-max bg-primary whitespace-nowrap">
                 Confirm
             </button>

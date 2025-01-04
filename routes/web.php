@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [FrontPageController::class, 'index'])->name('front.index');
+Route::get('/search', [FrontPageController::class, 'search'])->name('front.search');
+Route::get('/category/{category}', [FrontPageController::class, 'category'])->name('front.category.search');
 Route::get('/details/{product:slug}', [FrontPageController::class, 'details'])->name('front.details');
 
 Route::get('/dashboard', function () {

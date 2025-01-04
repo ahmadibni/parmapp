@@ -13,7 +13,7 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white flex flex-col gap-5 overflow-hidden p-10 shadow-sm sm:rounded-lg">
 
-                <div class="item-card flex flex-row justify-between items-center">
+                <div class="item-card flex flex-col gap-y-4 md:flex-row md:justify-between md:items-center">
                     <div class="flex flex-row item-center gap-4">
                         <div>
                             <p class="text-base text-slate-500">
@@ -29,30 +29,32 @@
                             Date
                         </p>
                         <h3 class="text-xl font-bold text-indigo-950">
-                            {{ $product_transaction->created_at }}
+                            {{ $product_transaction->created_at->format('d F Y') }}
                         </h3>
                     </div>
 
+
                     @if ($product_transaction->is_paid)
-                        <span class="py-1 px-3 bg-green-500 rounded-full">
+                        <span class="py-1 px-3 bg-green-500 w-fit rounded-full">
                             <p class="text-sm text-white font-bold uppercase">
                                 Approved
                             </p>
                         </span>
                     @else
-                        <span class="py-1 px-3 bg-orange-500 rounded-full">
+                        <span class="py-1 px-3 bg-orange-500 w-fit rounded-full">
                             <p class="text-sm text-white font-bold uppercase">
                                 Pending
                             </p>
                         </span>
                     @endif
 
+
                 </div>
                 <hr class="my-3">
                 <h3 class="text-xl font-bold text-indigo-950">
                     List of items
                 </h3>
-                <div class="grid-cols-4 grid gap-x-10">
+                <div class="grid-cols-1 md:grid-cols-4 grid gap-x-10">
                     <div class="flex flex-col gap-5 col-span-2">
                         {{-- Product list --}}
 
@@ -123,11 +125,12 @@
                         </div>
 
                     </div>
-                    <div class="flex flex-col gap-5 col-span-2 items-end">
+                    <div class="flex flex-col gap-5 col-span-2 mt-4 md:items-end">
                         <h3 class="text-xl font-bold text-indigo-950">
                             Proof of transactions
                         </h3>
-                        <img src="#" alt="" class="w-[300px] h-[400px]">
+                        <img src="{{ Storage::url($product_transaction->proof) }}" alt=""
+                            class="w-full md:w-[300px] md:h-[400px]">
                     </div>
 
                 </div>
